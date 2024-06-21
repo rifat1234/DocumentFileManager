@@ -3,7 +3,7 @@
 
 import Foundation
 
-actor DocumentFileManager {
+public actor DocumentFileManager {
     static let shared = DocumentFileManager()
     private init() {}
     
