@@ -4,7 +4,7 @@
 import Foundation
 
 public actor DocumentFileManager {
-    static let shared = DocumentFileManager()
+    public static let shared = DocumentFileManager()
     private init() {}
     
     var fm: FileManager {
