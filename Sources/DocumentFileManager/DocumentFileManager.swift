@@ -7,48 +7,48 @@ public actor DocumentFileManager {
     public static let shared = DocumentFileManager()
     private init() {}
     
-    var fm: FileManager {
+    private var fm: FileManager {
         FileManager.default
     }
     
-    var documentDiretoryURL:URL {
+    public var documentDiretoryURL:URL {
         get throws {
             URL.documentsDirectory
         }
     }
     
-    func fileExist(_ url: URL) -> Bool {
+    public func fileExist(_ url: URL) -> Bool {
         fm.fileExists(atPath: url.relativePath)
     }
     
-    func getContentsURL() throws -> [URL] {
+    public func getContentsURL() throws -> [URL] {
         try getContentsURL(of: documentDiretoryURL)
     }
     
-    func getContents() throws -> [String] {
+    public func getContents() throws -> [String] {
         try getContentsName(of: documentDiretoryURL)
     }
     
-    func copyItem(at oldURL:URL, to url: URL, replace: Bool = true) throws {
+    public func copyItem(at oldURL:URL, to url: URL, replace: Bool = true) throws {
         if replace {
             try remove(url)
         }
         try FileManager.default.copyItem(at: oldURL, to: url)
     }
     
-    func remove(_ url: URL) throws {
+    public func remove(_ url: URL) throws {
         if fileExist(url) {
             try fm.removeItem(at: url)
         }
     }
     
     //MARK: - Folder
-    func getFolderURL(_ folderName: String) throws -> URL {
+    public func getFolderURL(_ folderName: String) throws -> URL {
         return try documentDiretoryURL.appending(path: folderName, directoryHint: .isDirectory)
     }
     
     @discardableResult
-    func createFolder(_ folderName: String) throws -> URL {
+    public func createFolder(_ folderName: String) throws -> URL {
         let folderURL = try getFolderURL(folderName)
         if !fileExist(folderURL) {
             try fm.createDirectory(at: folderURL, withIntermediateDirectories: true)
@@ -57,17 +57,17 @@ public actor DocumentFileManager {
         return folderURL
     }
     
-    func getContents(of folderName: String) throws ->[String] {
+    public func getContents(of folderName: String) throws ->[String] {
         let folderURL = try getFolderURL(folderName)
         return try getContentsName(of: folderURL)
     }
     
-    func removeFolder(_ folderName: String) throws {
+    public func removeFolder(_ folderName: String) throws {
         let folderURL = try getFolderURL(folderName)
         try remove(folderURL)
     }
     
-    func deleteFiles(from folderName: String) throws {
+    public func deleteFiles(from folderName: String) throws {
         let folderURL = try getFolderURL(folderName)
         let urls = try getContentsURL(of: folderURL)
         try urls.forEach{ try remove($0) }
